@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Visitas y Likes</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px;background:#101827;color:#fff;font-family:Arial,sans-serif;text-align:center}
+.card{width:min(100%,390px);padding:32px 24px;border-radius:22px;background:#1e293b;box-shadow:0 12px 35px #0005}
+h1{font-size:25px;margin-top:0}p{color:#cbd5e1}
+.number{font-size:54px;font-weight:800;color:#38bdf8;margin:18px 0 28px}
+button{border:0;border-radius:999px;padding:14px 24px;background:#e11d48;color:white;font-size:17px;font-weight:bold;cursor:pointer}
+button:disabled{opacity:.8;cursor:not-allowed}
+#likesCount{font-size:30px;font-weight:800;color:#fb7185}
+.note{font-size:12px;line-height:1.5;margin-top:24px}
+</style>
+</head>
+<body>
+<main class="card">
+  <h1>👁️ Contador de visitas</h1>
+  <p>Visitas en este navegador</p>
+  <div class="number" id="visitas">0</div>
+  <h2>❤️ ¡Déjame tu like!</h2>
+  <button id="likeBtn" type="button">❤️ Me gusta</button>
+  <p><span id="likesCount">0</span> likes en este navegador</p>
+  <p id="mensaje" aria-live="polite"></p>
+  <p class="note">Gracias por visitar mi página 💖</p>
+</main>
+<script>
+const visitasKey = "pagina_visitas_v1";
+const likesKey = "pagina_likes_v1";
+const yaLikeKey = "pagina_ya_like_v1";
+
+let visitas = Number(localStorage.getItem(visitasKey) || 0) + 1;
+localStorage.setItem(visitasKey, visitas);
+document.getElementById("visitas").textContent = visitas;
+
+let likes = Number(localStorage.getItem(likesKey) || 0);
+const btn = document.getElementById("likeBtn");
+const likesCount = document.getElementById("likesCount");
+const mensaje = document.getElementById("mensaje");
+
+function actualizarLike() {
+  likesCount.textContent = likes;
+  if (localStorage.getItem(yaLikeKey) === "si") {
+    btn.textContent = "❤️ Ya diste like";
+    btn.disabled = true;
+    mensaje.textContent = "¡Gracias por tu like!";
+  }
+}
+actualizarLike();
+
+btn.addEventListener("click", () => {
+  if (localStorage.getItem(yaLikeKey) === "si") return;
+  likes++;
+  localStorage.setItem(likesKey, likes);
+  localStorage.setItem(yaLikeKey, "si");
+  actualizarLike();
+});
+</script>
+</body>
+</html>
